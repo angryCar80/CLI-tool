@@ -30,6 +30,8 @@ int main() {
     } else if (command == "list") {
       int index = 1;
       for (const auto& task : tasks) {
+        std::cout << index++ << ". " << task.name;
+
         if (task.done) {
           std::cout << "[x]";
         } else {
@@ -39,22 +41,21 @@ int main() {
       }
       std::cout << std::endl;
     } else {
-      std::cout << "Invalid Command" << std::endl;
+      std::cout << "Invalid Command type help to see the available commands"
+                << std::endl;
     }
 
     for (const auto& task : tasks) {
       int index = 1;
-      std::cout << index++ << ". " << task.name;
-      if (task.done) {
-        std::cout << "[x]";
-      } else {
-        std::cout << "[ ]";
-      }
-      std::cout << std::endl;
+    //   if (task.done) {
+    //     std::cout << "[x]";
+    //   } else {
+    //     std::cout << "[ ]";
+    //   }
+    //   std::cout << std::endl;
     }
-    std::cout << std::endl;
+    // std::cout << std::endl;
   }
 
   return 0;
-
 }
