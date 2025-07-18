@@ -44,7 +44,7 @@ int main() {
 
     for (const auto& task : tasks) {
       int index = 1;
-      std::cout << index++ << ". " << task.name << ": ";  // <- error is here
+      std::cout << index++ << ". " << task.name;
       if (task.done) {
         std::cout << "[x]";
       } else {
