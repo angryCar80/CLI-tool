@@ -47,14 +47,7 @@ int main() {
 
     for (const auto& task : tasks) {
       int index = 1;
-    //   if (task.done) {
-    //     std::cout << "[x]";
-    //   } else {
-    //     std::cout << "[ ]";
-    //   }
-    //   std::cout << std::endl;
     }
-    // std::cout << std::endl;
   }
 
   return 0;
