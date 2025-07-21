@@ -8,13 +8,12 @@ struct Task {
   bool done = false;
 };
 
-
 int main() {
   std::string input;
   std::vector<Task> tasks;
+  int index = 0;
 
   while (true) {
-
     std::cout << "> ";
     std::getline(std::cin, input);
 
@@ -26,14 +25,13 @@ int main() {
       std::cout << "Exiting..." << std::endl;
       break;
     } else if (command == "add") {
-      std::string name;
-
+        index++;
+        std::string name;
       std::getline(ss, name);
       tasks.push_back(Task{name});
     } else if (command == "list") {
-      int index = 1;
       for (const auto& task : tasks) {
-        std::cout << index++ << ". " << task.name;
+        std::cout << index << ". " << task.name;
         if (task.done) {
           std::cout << "[x]";
         } else {
@@ -42,16 +40,12 @@ int main() {
         std::cout << std::endl;
       }
       std::cout << std::endl;
-    }
-    else if(command == "done"){
-        int index;
-        ss >> index;
-        if (index > 0 && index < tasks.size())
-        {
-            tasks[index - 1].done = true;
-        }
-    }
-    else {
+    } else if (command == "done") {
+      ss >> index;
+      if (index > 0 && index < tasks.size()) {
+        tasks[index - 1].done = true;
+      }
+    } else {
       std::cout << "Invalid Command type help to see the available commands"
                 << std::endl;
     }
