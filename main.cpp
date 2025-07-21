@@ -25,8 +25,8 @@ int main() {
       std::cout << "Exiting..." << std::endl;
       break;
     } else if (command == "add") {
-        index++;
-        std::string name;
+      index++;
+      std::string name;
       std::getline(ss, name);
       tasks.push_back(Task{name});
     } else if (command == "list") {
@@ -45,7 +45,9 @@ int main() {
       if (index > 0 && index < tasks.size()) {
         tasks[index - 1].done = true;
       }
-    } else {
+    }
+    // adding the help command later
+    else {
       std::cout << "Invalid Command type help to see the available commands"
                 << std::endl;
     }
