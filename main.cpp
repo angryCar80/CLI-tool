@@ -12,6 +12,7 @@ int main() {
   std::string input;
   std::vector<Task> tasks;
   int index = 0;
+  int objectID = 0;
 
   while (true) {
     std::cout << "> ";
@@ -42,7 +43,7 @@ int main() {
       std::cout << std::endl;
     } else if (command == "done") {
       ss >> index;
-      if (index > 0 && index < tasks.size()) {
+      if (index > 0 && index <= tasks.size()) {
         tasks[index - 1].done = true;
       }
     }
