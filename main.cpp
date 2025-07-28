@@ -2,10 +2,12 @@
 #include <sstream>
 #include <string>
 #include <vector>
+#include <cstdlib>
 
 struct Task {
   std::string name;
   bool done = false;
+  int taskId;
 };
 
 int main() {
@@ -46,8 +48,16 @@ int main() {
       if (index > 0 && index <= tasks.size()) {
         tasks[index - 1].done = true;
       }
+    } else if (command == "undone") {
+      ss >> index;
+      if (index > 0 && index <= tasks.size()) {
+        tasks[index - 1].done = false;
+      }
     }
-    // adding the help command later
+    else if (command == "clear"){
+      system("clear");
+    }
+    // adding the help command when i finish all commands
     else {
       std::cout << "Invalid Command type help to see the available commands"
                 << std::endl;
