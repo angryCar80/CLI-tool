@@ -1,8 +1,12 @@
+#define RED "\033[31m"
+#define GREEN "\033[32m"
+#define RESET "\033[0m"
+
+#include <cstdlib>
 #include <iostream>
 #include <sstream>
 #include <string>
 #include <vector>
-#include <cstdlib>
 
 struct Task {
   std::string name;
@@ -46,17 +50,41 @@ int main() {
       ss >> index;
       if (index > 0 && index <= (int)tasks.size()) {
         tasks[index - 1].done = true;
+        std::cout << GREEN << "Task Done" << RESET << std::endl;
       }
     } else if (command == "undone") {
       int index;
       ss >> index;
       if (index > 0 && index <= (int)tasks.size()) {
         tasks[index - 1].done = false;
+      } else if (command == "delete") {
+        if (!(ss >> index)) {
+          std::cout << RED << "Error: Please provide a valid task number.\n" << RESET;
+        }
+        int index;
+        ss >> index;
+        if (index > 0 && index <= (int)tasks.size()) {
+          tasks.erase(tasks.begin() + index - 1);
+          std::cout << "Task Deleted.\n";
+        }
       }
     } else if (command == "clear") {
       system("clear");
+    } else if (command == "help") {
+      std::cout << "this is the help manual \n" << std::endl;
+      std::cout << "to add a task you need to type \n > add taskname"
+                << std::endl;
+      std::cout << "to mark the task done you need to type \n > done taskname"
+                << std::endl;
+      std::cout << "to mark down the task undone you need to type \n > undone "
+                   "taskname"
+                << std::endl;
+      std::cout << "to list the todos you need to type \n > list " << std::endl;
+      std::cout << "\n";
     } else {
-      std::cout << "Invalid Command. Type help to see the available commands." << std::endl;
+      std::cout << RED
+                << "Invalid Command. Type help to see the available commands."
+                << RESET << std::endl;
     }
   }
 
