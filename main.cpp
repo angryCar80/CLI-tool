@@ -57,30 +57,15 @@ int main() {
       ss >> index;
       if (index > 0 && index <= (int)tasks.size()) {
         tasks[index - 1].done = false;
-      } else if (command == "delete") {
-        if (!(ss >> index)) {
-          std::cout << RED << "Error: Please provide a valid task number.\n" << RESET;
-        }
-        int index;
-        ss >> index;
-        if (index > 0 && index <= (int)tasks.size()) {
-          tasks.erase(tasks.begin() + index - 1);
-          std::cout << "Task Deleted.\n";
-        }
       }
     } else if (command == "clear") {
       system("clear");
     } else if (command == "help") {
-      std::cout << "this is the help manual \n" << std::endl;
-      std::cout << "to add a task you need to type \n > add taskname"
+      std::cout << "add {taskname}  to add tasks" << std::endl;
+      std::cout << "done {tasknumber}  to done a task" << std::endl;
+      std::cout << "undone {tasknumber}  to undone a task" << std::endl;
+      std::cout << "delete {tasknumber}   to delete a task (coming soon)"
                 << std::endl;
-      std::cout << "to mark the task done you need to type \n > done taskname"
-                << std::endl;
-      std::cout << "to mark down the task undone you need to type \n > undone "
-                   "taskname"
-                << std::endl;
-      std::cout << "to list the todos you need to type \n > list " << std::endl;
-      std::cout << "\n";
     } else {
       std::cout << RED
                 << "Invalid Command. Type help to see the available commands."
