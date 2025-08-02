@@ -1,16 +1,17 @@
-// adding color for to make the app look cool
-#include <ostream>
+// adding colors for to make the app look cool and better maybe
 #define RED "\033[31m"
 #define GREEN "\033[32m"
 #define RESET "\033[0m"
 
+// for making the app work and they are from the std lib
 #include <cstdlib>
 #include <iostream>
+#include <ostream>
 #include <sstream>
 #include <string>
 #include <vector>
 
-// for saving data we will use .jas*n
+// for saving data we will use .jas*n its not from the std lib
 #include <fstream>
 #include <nlohmann/json.hpp>
 using jason = nlohmann::json;
@@ -26,7 +27,7 @@ int main() {
 
   while (true) {
     std::cout << "> ";
-    std::getline(std::cin, input);  // reading user input
+    std::getline(std::cin, input); // reading user input
 
     std::stringstream ss(input);
     std::string command;
@@ -42,7 +43,8 @@ int main() {
       std::string name;
       std::getline(ss, name);
       // Remove leading space from name if present
-      if (!name.empty() && name[0] == ' ') name = name.substr(1);
+      if (!name.empty() && name[0] == ' ')
+        name = name.substr(1);
       tasks.push_back(Task{name});
     }
     // the list command work like ls command in linux it list the task and if
@@ -95,19 +97,19 @@ int main() {
     else if (command == "save") {
       jason j;
 
-      for (const auto& task : tasks) {
+      for (const auto &task : tasks) {
         j.push_back({{"name", task.name}, {"done", task.done}});
       }
       std::ofstream file("tasks-data.jason");
       file << j.dump();
       file.close();
       std::cout << GREEN << "Task Saved" << RESET << std::endl;
+    }else if (command == "delete"){
     }
     // checking if the command is not valid by an else statment
     else {
-      std::cout << RED
-                << "Invalid Command. Type help to see the available commands."
-                << RESET << std::endl;
+      std::cout << "Invalid Command. Type" << GREEN << " help " << RESET
+                << "to see the available commands." << std::endl;
     }
   }
 
