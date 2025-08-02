@@ -10,3 +10,5 @@ making the indexing of the tasks like be good not messed up
 
 So am going to work on file saving tomorrow but first fixing the delete command that is not working
 then work on the file saving
+
+##### on another machine ??
