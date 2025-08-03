@@ -25,7 +25,7 @@ int main() {
   std::string input;
   std::vector<Task> tasks; // creating a tasks vector
 
-  //the main loop
+  // the main loop
   while (true) {
     std::cout << "> ";
     std::getline(std::cin, input); // reading user input
@@ -91,6 +91,7 @@ int main() {
       std::cout << "delete {tasknumber}   to delete a task " << std::endl;
       std::cout << "save                  to save whatever you did"
                 << std::endl;
+      std::cout << "More coming soon idk what to create " << std::endl;
     }
     // to save the tasks in a .jas*n file
     // this command need some more updates to make it work like it should
@@ -104,8 +105,8 @@ int main() {
       file << j.dump();
       file.close();
       std::cout << GREEN << "Task Saved" << RESET << std::endl;
-    } 
-    //the delete command that can delete commands
+    }
+    // the delete command that can delete commands
     else if (command == "delete") {
       int index;
       ss >> index;
