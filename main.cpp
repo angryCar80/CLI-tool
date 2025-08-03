@@ -23,8 +23,9 @@ struct Task {
 
 int main() {
   std::string input;
-  std::vector<Task> tasks;
+  std::vector<Task> tasks; // creating a tasks vector
 
+  //the main loop
   while (true) {
     std::cout << "> ";
     std::getline(std::cin, input); // reading user input
@@ -103,7 +104,9 @@ int main() {
       file << j.dump();
       file.close();
       std::cout << GREEN << "Task Saved" << RESET << std::endl;
-    } else if (command == "delete") {
+    } 
+    //the delete command that can delete commands
+    else if (command == "delete") {
       int index;
       ss >> index;
       if (index > 0 && index <= int(tasks.size())) {
