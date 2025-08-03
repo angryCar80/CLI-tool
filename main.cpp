@@ -87,8 +87,7 @@ int main() {
       std::cout << "add {taskname}  to add tasks" << std::endl;
       std::cout << "done {tasknumber}  to done a task" << std::endl;
       std::cout << "undone {tasknumber}  to undone a task" << std::endl;
-      std::cout << "delete {tasknumber}   to delete a task (coming soon)"
-                << std::endl;
+      std::cout << "delete {tasknumber}   to delete a task " << std::endl;
       std::cout << "save                  to save whatever you did"
                 << std::endl;
     }
@@ -104,7 +103,15 @@ int main() {
       file << j.dump();
       file.close();
       std::cout << GREEN << "Task Saved" << RESET << std::endl;
-    }else if (command == "delete"){
+    } else if (command == "delete") {
+      int index;
+      ss >> index;
+      if (index > 0 && index <= int(tasks.size())) {
+        tasks.erase(tasks.begin() + (index - 1));
+        std::cout << RED << "Task deleted" << RESET << std::endl;
+      } else {
+        std::cout << RED << "Invalide Task number" << RESET << std::endl;
+      }
     }
     // checking if the command is not valid by an else statment
     else {
