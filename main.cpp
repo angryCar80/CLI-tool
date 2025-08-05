@@ -36,7 +36,7 @@ int main() {
 
     // the exit command to exit the app
     if (command == "exit") {
-      std::cout << "Exiting..." << std::endl;
+      std::cout << "Exiting..." << "\n";
       break;
     }
     // the add command to add tasks
@@ -58,9 +58,9 @@ int main() {
         } else {
           std::cout << " [ ]";
         }
-        std::cout << std::endl;
+        std::cout << "\n";
       }
-      std::cout << std::endl;
+      std::cout << "\n";
     }
     // to done the task by the index
     else if (command == "done") {
@@ -68,7 +68,7 @@ int main() {
       ss >> index;
       if (index > 0 && index <= (int)tasks.size()) {
         tasks[index - 1].done = true;
-        std::cout << GREEN << "Task Done" << RESET << std::endl;
+        std::cout << GREEN << "Task Done" << RESET << "\n";
       }
     }
     // to undone the task by the index
@@ -85,42 +85,42 @@ int main() {
     }
     // the help command the can help you
     else if (command == "help") {
-      std::cout << "add {taskname}  to add tasks" << std::endl;
-      std::cout << "done {tasknumber}  to done a task" << std::endl;
-      std::cout << "undone {tasknumber}  to undone a task" << std::endl;
-      std::cout << "delete {tasknumber}   to delete a task " << std::endl;
+      std::cout << "add {taskname}  to add tasks" << "\n";
+      std::cout << "done {tasknumber}  to done a task" << "\n";
+      std::cout << "undone {tasknumber}  to undone a task" << "\n";
+      std::cout << "delete {tasknumber}   to delete a task " << "\n";
       std::cout << "save                  to save whatever you did"
-                << std::endl;
-      std::cout << "More coming soon idk what to create " << std::endl;
+                << "\n";
+      std::cout << "More coming soon idk what to create " << "\n";
     }
     // to save the tasks in a .jas*n file
-    // this command need some more updates to make it work like it should
+    // this command need some more updates to make it work
+    // TODO: make the file load and make it readable
     else if (command == "save") {
       jason j;
-
       for (const auto &task : tasks) {
         j.push_back({{"name", task.name}, {"done", task.done}});
       }
       std::ofstream file("tasks-data.jason");
       file << j.dump();
       file.close();
-      std::cout << GREEN << "Task Saved" << RESET << std::endl;
+      std::cout << GREEN << "Task Saved" << RESET << "\n";
     }
-    // the delete command that can delete commands
+    // the delete command
     else if (command == "delete") {
       int index;
       ss >> index;
       if (index > 0 && index <= int(tasks.size())) {
         tasks.erase(tasks.begin() + (index - 1));
-        std::cout << RED << "Task deleted" << RESET << std::endl;
+        std::cout << RED << "Task deleted" << RESET << "\n";
       } else {
-        std::cout << RED << "Invalide Task number" << RESET << std::endl;
+        std::cout << RED << "Invalide Task number" << RESET << "\n";
       }
     }
-    // checking if the command is not valid by an else statment
+    // checking if the command is not valid by the else statment
     else {
       std::cout << "Invalid Command. Type" << GREEN << " help " << RESET
-                << "to see the available commands." << std::endl;
+                << "to see the available commands." << "\n";
     }
   }
 
