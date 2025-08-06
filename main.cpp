@@ -101,7 +101,7 @@ int main() {
       for (const auto &task : tasks) {
         j.push_back({{"name", task.name}, {"done", task.done}});
       }
-      std::ofstream file("tasks-data.jason");
+      std::ofstream file("data.jason");
       file << j.dump();
       file.close();
       std::cout << GREEN << "Task Saved" << RESET << "\n";
