@@ -1,7 +1,9 @@
 // adding colors for to make the app look cool and better maybe
+#define RESET "\033[0m"
+#define BOLD "\033[1m"
 #define RED "\033[31m"
 #define GREEN "\033[32m"
-#define RESET "\033[0m"
+#define BLUE "\033[34m"
 
 // for making the app work and they are from the std lib
 #include <cstdlib>
@@ -26,8 +28,10 @@ int main() {
   std::vector<Task> tasks; // creating a tasks vector
 
   // the main loop
+
   while (true) {
-    std::cout << "> ";
+    std::cout << "┌────────────────────────────\n";
+    std::cout << "└─> ";
     std::getline(std::cin, input); // reading user input
 
     std::stringstream ss(input);
@@ -50,7 +54,7 @@ int main() {
     }
     // the list command work like ls command in linux it list the task and if
     // they are done or not
-    else if (command == "list") {
+    else if (command == "list" || command == "ls") {
       for (size_t i = 0; i < tasks.size(); ++i) {
         std::cout << (i + 1) << ". " << tasks[i].name;
         if (tasks[i].done) {
@@ -80,11 +84,11 @@ int main() {
       }
     }
     // to clear the screen (WORKS ONLY IN LINUX)
-    else if (command == "clear") {
+    else if (command == "clear" || command == "c") {
       system("clear");
     }
     // the help command the can help you
-    else if (command == "help") {
+    else if (command == "help" || command == "h") {
       std::cout << "add {taskname}  to add tasks" << "\n";
       std::cout << "done {tasknumber}  to done a task" << "\n";
       std::cout << "undone {tasknumber}  to undone a task" << "\n";
@@ -96,7 +100,7 @@ int main() {
     // to save the tasks in a .jas*n file
     // this command need some more updates to make it work
     // TODO: make the file load and make it readable
-    else if (command == "save") {
+    else if (command == "save" || command == "s") {
       jason j;
       for (const auto &task : tasks) {
         j.push_back({{"name", task.name}, {"done", task.done}});
@@ -107,7 +111,7 @@ int main() {
       std::cout << GREEN << "Task Saved" << RESET << "\n";
     }
     // the delete command
-    else if (command == "delete") {
+    else if (command == "delete" || command == "d") {
       int index;
       ss >> index;
       if (index > 0 && index <= int(tasks.size())) {
