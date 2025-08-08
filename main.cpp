@@ -7,6 +7,7 @@
 
 // for making the app work and they are from the std lib
 #include <cstdlib>
+#include <ctime>
 #include <iostream>
 #include <ostream>
 #include <sstream>
@@ -20,7 +21,7 @@ using jason = nlohmann::json;
 
 struct Task {
   std::string name;
-  bool done = false;
+  bool toggle = false;
 };
 
 int main() {
@@ -30,8 +31,8 @@ int main() {
   // the main loop
 
   while (true) {
-    std::cout << "┌────────────────────────────\n";
-    std::cout << "└─> ";
+    std::cout << GREEN << "┌────────────────────────────\n";
+    std::cout << "└─> " << RESET;
     std::getline(std::cin, input); // reading user input
 
     std::stringstream ss(input);
@@ -44,21 +45,21 @@ int main() {
       break;
     }
     // the add command to add tasks
-    else if (command == "add") {
+    else if (command == "add" || command == "a") {
       std::string name;
       std::getline(ss, name);
       // Remove leading space from name if present
       if (!name.empty() && name[0] == ' ')
         name = name.substr(1);
-      tasks.push_back(Task{name});
+      std::cout << RED << "You can add an empty task." << RESET << '\n';
     }
     // the list command work like ls command in linux it list the task and if
-    // they are done or not
+    // they are toggled or not
     else if (command == "list" || command == "ls") {
       for (size_t i = 0; i < tasks.size(); ++i) {
         std::cout << (i + 1) << ". " << tasks[i].name;
-        if (tasks[i].done) {
-          std::cout << " [x]";
+        if (tasks[i].toggle) {
+          std::cout << " [X]";
         } else {
           std::cout << " [ ]";
         }
@@ -66,36 +67,40 @@ int main() {
       }
       std::cout << "\n";
     }
-    // to done the task by the index
-    else if (command == "done") {
+    // to toggle the task by the index
+    else if (command == "toggle" || command == "t") {
       int index;
       ss >> index;
       if (index > 0 && index <= (int)tasks.size()) {
-        tasks[index - 1].done = true;
-        std::cout << GREEN << "Task Done" << RESET << "\n";
+        tasks[index - 1].toggle = true;
+        std::cout << GREEN << "Task Toggled" << RESET << "\n";
       }
     }
-    // to undone the task by the index
-    else if (command == "undone") {
+    // to untoggle the task by the index
+    else if (command == "untoggle" || command == "unt") {
       int index;
       ss >> index;
       if (index > 0 && index <= (int)tasks.size()) {
-        tasks[index - 1].done = false;
+        tasks[index - 1].toggle = false;
       }
     }
     // to clear the screen (WORKS ONLY IN LINUX)
-    else if (command == "clear" || command == "c") {
+    else if (command == "clear" || command == "cls") {
       system("clear");
     }
     // the help command the can help you
     else if (command == "help" || command == "h") {
-      std::cout << "add {taskname}  to add tasks" << "\n";
-      std::cout << "done {tasknumber}  to done a task" << "\n";
-      std::cout << "undone {tasknumber}  to undone a task" << "\n";
-      std::cout << "delete {tasknumber}   to delete a task " << "\n";
-      std::cout << "save                  to save whatever you did"
+      std::cout << "add {taskname}  to add tasks (a for short hand)" << "\n";
+      std::cout << "toggle {tasknumber}  to toggle a task (t for short hand)"
                 << "\n";
-      std::cout << "More coming soon idk what to create " << "\n";
+      std::cout
+          << "untoggle {tasknumber}  to untoggle a task (unt for short hand)"
+          << "\n";
+      std::cout << "delete {tasknumber}   to delete a task (d for short hand)"
+                << "\n";
+      std::cout
+          << "save                  to save whatever you did (s for short hand)"
+          << "\n";
     }
     // to save the tasks in a .jas*n file
     // this command need some more updates to make it work
@@ -103,7 +108,7 @@ int main() {
     else if (command == "save" || command == "s") {
       jason j;
       for (const auto &task : tasks) {
-        j.push_back({{"name", task.name}, {"done", task.done}});
+        j.push_back({{"name", task.name}, {"toggled", task.toggle}});
       }
       std::ofstream file("data.jason");
       file << j.dump();
