@@ -7,7 +7,6 @@
 
 // for making the app work and they are from the std lib
 #include <cstdlib>
-#include <ctime>
 #include <iostream>
 #include <ostream>
 #include <sstream>
@@ -106,7 +105,9 @@ int main() {
       std::cout
           << "save                  to save whatever you did (s for short hand)"
           << "\n";
-      std::cout << "Load            to load the file that have the data (s for short hand)" << '\n';
+      std::cout << "Load            to load the file that have the data (s for "
+                   "short hand)"
+                << '\n';
     }
     // to save the tasks in a .jas*n file
     // this command need some more updates to make it work
@@ -115,8 +116,13 @@ int main() {
       for (const auto &task : tasks) {
         j.push_back({{"name", task.name}, {"toggled", task.toggle}});
       }
+      if (j.empty()) {
+        std::cout << RED << "Save file is empty" << RESET << "\n";
+        continue;
+      }
+
       std::ofstream file("data.json");
-      file << j.dump();
+      file << j.dump(4);
       file.close();
       std::cout << GREEN << "Task Saved" << RESET << "\n";
     } else if (command == "load" || command == "l") {
