@@ -23,14 +23,14 @@ struct Task {
   std::string name;
   bool toggle = false;
 };
-
+void ClearScreen() { std::cout << "\033[2J\033[1;1H"; }
 int main() {
   std::string input;
   std::vector<Task> tasks; // creating a tasks vector
 
   // the main loop
-
   while (true) {
+    // std::fstream::open("data.jason")
     std::cout << GREEN << "┌────────────────────────────\n";
     std::cout << "└─> " << RESET;
     std::getline(std::cin, input); // reading user input
@@ -49,9 +49,14 @@ int main() {
       std::string name;
       std::getline(ss, name);
       // Remove leading space from name if present
-      if (!name.empty() && name[0] == ' ')
+      if (!name.empty() && name[0] == ' ') {
         name = name.substr(1);
-      std::cout << RED << "You can add an empty task." << RESET << '\n';
+      }
+      if (name.empty()) {
+        std::cout << RED << "You cant add an empty task" << RESET << '\n';
+      }
+      tasks.push_back({name, false});
+      std::cout << GREEN << "Task added: " << name << RESET << '\n';
     }
     // the list command work like ls command in linux it list the task and if
     // they are toggled or not
@@ -86,7 +91,7 @@ int main() {
     }
     // to clear the screen (WORKS ONLY IN LINUX)
     else if (command == "clear" || command == "cls") {
-      system("clear");
+      ClearScreen();
     }
     // the help command the can help you
     else if (command == "help" || command == "h") {
@@ -101,19 +106,36 @@ int main() {
       std::cout
           << "save                  to save whatever you did (s for short hand)"
           << "\n";
+      std::cout << "Load            to load the file that have the data (s for short hand)" << '\n';
     }
     // to save the tasks in a .jas*n file
     // this command need some more updates to make it work
-    // TODO: make the file load and make it readable
     else if (command == "save" || command == "s") {
       jason j;
       for (const auto &task : tasks) {
         j.push_back({{"name", task.name}, {"toggled", task.toggle}});
       }
-      std::ofstream file("data.jason");
+      std::ofstream file("data.json");
       file << j.dump();
       file.close();
       std::cout << GREEN << "Task Saved" << RESET << "\n";
+    } else if (command == "load" || command == "l") {
+      std::ifstream file("data.json");
+      if (!file.is_open()) {
+        std::cout << RED << "No save file found" << RESET << '\n';
+        continue;
+      }
+      jason j;
+      file >> j;
+      file.close();
+      tasks.clear();
+      for (const auto &item : j) {
+        Task t;
+        t.name = item.at("name").get<std::string>();
+        t.toggle = item.at("toggled").get<bool>();
+        tasks.push_back(t);
+      }
+      std::cout << GREEN << "Loaded" << RESET << '\n';
     }
     // the delete command
     else if (command == "delete" || command == "d") {
