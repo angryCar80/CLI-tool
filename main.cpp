@@ -22,11 +22,13 @@ struct Task {
   std::string name;
   bool toggle = false;
 };
+
 void ClearScreen() { std::cout << "\033[2J\033[1;1H"; }
+
 int main() {
   std::string input;
   std::vector<Task> tasks; // creating a tasks vector
-
+  bool autosave = false;
   // the main loop
   while (true) {
     // std::fstream::open("data.jason")
@@ -38,9 +40,25 @@ int main() {
     std::string command;
     ss >> command;
 
-    // the exit command to exit the app
     if (command == "exit") {
       std::cout << "Exiting..." << "\n";
+      if (autosave == true) {
+        jason j;
+        for (const auto &task : tasks) {
+          j.push_back({{"name", task.name}, {"toggled", task.toggle}});
+        }
+        if (j.empty()) {
+          std::cout << RED << "Save file is empty" << RESET << "\n";
+          continue;
+        }
+
+        std::ofstream file("data.json");
+        file << j.dump(4);
+        file.close();
+        std::cout << GREEN << "Saving..." << RESET << "\n";
+      } else if (autosave == false){
+        std::cout << "NONO\n";
+      }
       break;
     }
     // the add command to add tasks
@@ -91,6 +109,17 @@ int main() {
     // to clear the screen (WORKS ONLY IN LINUX)
     else if (command == "clear" || command == "cls") {
       ClearScreen();
+    } else if (command == "autosave") {
+      std::string onoff;
+      ss >> onoff;
+      if (onoff == "on") {
+        // make the autosaving on
+        autosave = true;
+        std::cout << GREEN << "Autosave is on" << RESET << '\n';
+      } else if (onoff == "off") {
+        autosave = false;
+        std::cout << RED << "Autosave is off" << RESET << '\n';
+      }
     }
     // the help command the can help you
     else if (command == "help" || command == "h") {
@@ -105,7 +134,7 @@ int main() {
       std::cout
           << "save                  to save whatever you did (s for short hand)"
           << "\n";
-      std::cout << "Load            to load the file that have the data (s for "
+      std::cout << "load            to load the file that have the data (l for "
                    "short hand)"
                 << '\n';
     }
