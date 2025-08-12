@@ -55,9 +55,9 @@ int main() {
         std::ofstream file("data.json");
         file << j.dump(4);
         file.close();
-        std::cout << GREEN << "Saving..." << RESET << "\n";
-      } else if (autosave == false){
-        std::cout << "NONO\n";
+        std::cout << GREEN << "Saving ..." << RESET << "\n";
+      } else if (autosave == false) {
+        std::cout << "Without saving\n";
       }
       break;
     }
@@ -138,9 +138,15 @@ int main() {
                    "short hand)"
                 << '\n';
     }
-    // to save the tasks in a .jas*n file
+    // to save the tasks in a .js*n file
     // this command need some more updates to make it work
-    else if (command == "save" || command == "s") {
+    else if (command == "save tasks" || command == "st") {
+      std::string settings;
+      ss >> settings;
+      if (settings == "settings"){
+        std::cout << "Saving settings";
+        std::ofstream file("settings.json"); 
+      }
       jason j;
       for (const auto &task : tasks) {
         j.push_back({{"name", task.name}, {"toggled", task.toggle}});
@@ -148,7 +154,7 @@ int main() {
       if (j.empty()) {
         std::cout << RED << "Save file is empty" << RESET << "\n";
         continue;
-      }
+     
 
       std::ofstream file("data.json");
       file << j.dump(4);
