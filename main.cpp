@@ -5,17 +5,14 @@
 #define GREEN "\033[32m"
 #define BLUE "\033[34m"
 
-// for making the app work and they are from the std lib
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
-#include <ostream>
+#include <nlohmann/json.hpp>
 #include <sstream>
 #include <string>
 #include <vector>
 
-// for saving data we will use .jas*n its not from the std lib
-#include <fstream>
-#include <nlohmann/json.hpp>
 using jason = nlohmann::json;
 
 struct Task {
@@ -27,69 +24,62 @@ void ClearScreen() { std::cout << "\033[2J\033[1;1H"; }
 
 int main() {
   std::string input;
-  std::vector<Task> tasks; // creating a tasks vector
+  std::vector<Task> tasks;
   bool autosave = false;
-  // the main loop
+
   while (true) {
-    // std::fstream::open("data.jason")
     std::cout << GREEN << "┌────────────────────────────\n";
     std::cout << "└─> " << RESET;
-    std::getline(std::cin, input); // reading user input
+    std::getline(std::cin, input);
 
     std::stringstream ss(input);
     std::string command;
     ss >> command;
 
+    // EXIT
     if (command == "exit") {
-      std::cout << "Exiting..." << "\n";
-      if (autosave == true) {
+      std::cout << "Exiting...\n";
+      if (autosave) {
         jason j;
         for (const auto &task : tasks) {
           j.push_back({{"name", task.name}, {"toggled", task.toggle}});
         }
         if (j.empty()) {
           std::cout << RED << "Save file is empty" << RESET << "\n";
-          continue;
+        } else {
+          std::ofstream file("data.json");
+          file << j.dump(4);
+          file.close();
+          std::cout << GREEN << "Saving ..." << RESET << "\n";
         }
-
-        std::ofstream file("data.json");
-        file << j.dump(4);
-        file.close();
-        std::cout << GREEN << "Saving ..." << RESET << "\n";
-      } else if (autosave == false) {
+      } else {
         std::cout << "Without saving\n";
       }
       break;
     }
-    // the add command to add tasks
+    // ADD TASK
     else if (command == "add" || command == "a") {
       std::string name;
       std::getline(ss, name);
-      // Remove leading space from name if present
       if (!name.empty() && name[0] == ' ') {
         name = name.substr(1);
       }
       if (name.empty()) {
-        std::cout << RED << "You cant add an empty task" << RESET << '\n';
+        std::cout << RED << "You can't add an empty task" << RESET << '\n';
+        continue;
       }
       tasks.push_back({name, false});
       std::cout << GREEN << "Task added: " << name << RESET << '\n';
     }
-    // the list command work like ls command in linux it list the task and if
-    // they are toggled or not
+    // LIST TASKS
     else if (command == "list" || command == "ls") {
       for (size_t i = 0; i < tasks.size(); ++i) {
         std::cout << (i + 1) << ". " << tasks[i].name;
-        if (tasks[i].toggle) {
-          std::cout << " [X]";
-        } else {
-          std::cout << " [ ]";
-        }
-        std::cout << "\n";
+        std::cout << (tasks[i].toggle ? " [X]" : " [ ]") << "\n";
       }
       std::cout << "\n";
     }
-    // to toggle the task by the index
+    // TOGGLE
     else if (command == "toggle" || command == "t") {
       int index;
       ss >> index;
@@ -98,7 +88,7 @@ int main() {
         std::cout << GREEN << "Task Toggled" << RESET << "\n";
       }
     }
-    // to untoggle the task by the index
+    // UNTOGGLE
     else if (command == "untoggle" || command == "unt") {
       int index;
       ss >> index;
@@ -106,14 +96,15 @@ int main() {
         tasks[index - 1].toggle = false;
       }
     }
-    // to clear the screen (WORKS ONLY IN LINUX)
+    // CLEAR SCREEN
     else if (command == "clear" || command == "cls") {
       ClearScreen();
-    } else if (command == "autosave") {
+    }
+    // AUTOSAVE
+    else if (command == "autosave") {
       std::string onoff;
       ss >> onoff;
       if (onoff == "on") {
-        // make the autosaving on
         autosave = true;
         std::cout << GREEN << "Autosave is on" << RESET << '\n';
       } else if (onoff == "off") {
@@ -121,32 +112,25 @@ int main() {
         std::cout << RED << "Autosave is off" << RESET << '\n';
       }
     }
-    // the help command the can help you
+    // HELP
     else if (command == "help" || command == "h") {
-      std::cout << "add {taskname}  to add tasks (a for short hand)" << "\n";
-      std::cout << "toggle {tasknumber}  to toggle a task (t for short hand)"
-                << "\n";
-      std::cout
-          << "untoggle {tasknumber}  to untoggle a task (unt for short hand)"
-          << "\n";
-      std::cout << "delete {tasknumber}   to delete a task (d for short hand)"
-                << "\n";
-      std::cout
-          << "save                  to save whatever you did (s for short hand)"
-          << "\n";
-      std::cout << "load            to load the file that have the data (l for "
-                   "short hand)"
-                << '\n';
+      std::cout << "add {taskname}   to add tasks (a for short)\n";
+      std::cout << "toggle {num}     to toggle a task (t for short)\n";
+      std::cout << "untoggle {num}   to untoggle a task (unt for short)\n";
+      std::cout << "delete {num}     to delete a task (d for short)\n";
+      std::cout << "save tasks       to save your tasks (st for short)\n";
+      std::cout << "load             to load saved tasks (l for short)\n";
     }
-    // to save the tasks in a .js*n file
-    // this command need some more updates to make it work
-    else if (command == "save tasks" || command == "st") {
+    // SAVE
+    else if (command == "save" || command == "s" || command == "save tasks" ||
+             command == "st") {
       std::string settings;
       ss >> settings;
-      if (settings == "settings"){
-        std::cout << "Saving settings";
-        std::ofstream file("settings.json"); 
+      if (settings == "settings") {
+        std::ofstream file("settings.json");
+        std::cout << "Saving settings\n";
       }
+
       jason j;
       for (const auto &task : tasks) {
         j.push_back({{"name", task.name}, {"toggled", task.toggle}});
@@ -154,13 +138,14 @@ int main() {
       if (j.empty()) {
         std::cout << RED << "Save file is empty" << RESET << "\n";
         continue;
-     
-
+      }
       std::ofstream file("data.json");
       file << j.dump(4);
       file.close();
-      std::cout << GREEN << "Task Saved" << RESET << "\n";
-    } else if (command == "load" || command == "l") {
+      std::cout << GREEN << "Tasks Saved" << RESET << "\n";
+    }
+    // LOAD
+    else if (command == "load" || command == "l") {
       std::ifstream file("data.json");
       if (!file.is_open()) {
         std::cout << RED << "No save file found" << RESET << '\n';
@@ -178,7 +163,7 @@ int main() {
       }
       std::cout << GREEN << "Loaded" << RESET << '\n';
     }
-    // the delete command
+    // DELETE
     else if (command == "delete" || command == "d") {
       int index;
       ss >> index;
@@ -186,13 +171,13 @@ int main() {
         tasks.erase(tasks.begin() + (index - 1));
         std::cout << RED << "Task deleted" << RESET << "\n";
       } else {
-        std::cout << RED << "Invalide Task number" << RESET << "\n";
+        std::cout << RED << "Invalid Task number" << RESET << "\n";
       }
     }
-    // checking if the command is not valid by the else statment
+    // INVALID COMMAND
     else {
-      std::cout << "Invalid Command. Type" << GREEN << " help " << RESET
-                << "to see the available commands." << "\n";
+      std::cout << "Invalid Command. Type " << GREEN << "help" << RESET
+                << " to see available commands.\n";
     }
   }
 
