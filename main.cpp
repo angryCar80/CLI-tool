@@ -38,7 +38,7 @@ int main() {
 
     // EXIT
     if (command == "exit") {
-      std::cout << "Exiting...\n";
+      std::cout << "Exiting ,";
       if (autosave) {
         jason j;
         for (const auto &task : tasks) {
@@ -53,7 +53,7 @@ int main() {
           std::cout << GREEN << "Saving ..." << RESET << "\n";
         }
       } else {
-        std::cout << "Without saving\n";
+        std::cout << RED << "Without saving\n" << RESET;
       }
       break;
     }
@@ -150,6 +150,7 @@ int main() {
       if (!file.is_open()) {
         std::cout << RED << "No save file found" << RESET << '\n';
         continue;
+      } else if (command == "autoload") {
       }
       jason j;
       file >> j;
